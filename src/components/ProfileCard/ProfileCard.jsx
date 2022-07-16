@@ -31,6 +31,7 @@ const ProfileCard = () => {
         </div>
         <hr />
       </div>
+      <span>My Profile</span>
     </div>
   );
 };
