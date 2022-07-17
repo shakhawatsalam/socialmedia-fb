@@ -13,24 +13,35 @@ const PostShare = () => {
       <img src={ProfileImage} alt='' />
       <div>
         <input type='text' placeholder="What's on your mind" />
-      </div>
-      <div className='postOptions'>
-        <div className='option'>
+      <div className='postOption'>
+        <div className='option'
+        style={{color: 'var(--photo)'}}
+        >
           <UilScenery />
           Photo
         </div>
-        <div className='option'>
+        <div className='option'
+        style={{color: 'var(--video)'}}
+        >
           <UilPlayCircle />
           Video
         </div>
-        <div className='option'>
+        <div className='option'
+        style={{color: 'var(--location)'}}
+        >
           <UilLocationPoint />
           Location
         </div>
-        <div className='option'>
+        <div className='option'
+        style={{color: 'var(--shedule)'}}
+        >
           <UilSchedule />
-          Schedule
-        </div>
+          Shedule
+          </div>
+          <button className="button ps_button">
+            Share
+          </button>
+      </div>
       </div>
     </div>
   );
