@@ -10,10 +10,11 @@ import { UilTimes } from "@iconscout/react-unicons";
 const PostShare = () => {
   const [image, setImage] = useState(null);
   const imageRef = useRef();
-
+  console.log(image);
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
+
       setImage({
         image: URL.createObjectURL(img),
       });
@@ -25,7 +26,10 @@ const PostShare = () => {
       <div>
         <input type='text' placeholder="What's on your mind" />
         <div className='postOption'>
-          <div className='option' style={{ color: "var(--photo)" }}>
+          <div
+            className='option'
+            style={{ color: "var(--photo)" }}
+            onClick={() => imageRef.current.click()}>
             <UilScenery />
             Photo
           </div>
@@ -43,9 +47,20 @@ const PostShare = () => {
           </div>
           <button className='button ps_button'>Share</button>
           <div style={{ display: "none" }}>
-            <input type='file' name='myImage' ref={imageRef} onChange={onImageChange} />
+            <input
+              type='file'
+              name='myImage'
+              ref={imageRef}
+              onChange={onImageChange}
+            />
           </div>
         </div>
+        {image && (
+          <div className='previewImage'>
+            <UilTimes onClick={() => setImage(null) } />
+            <img src={image.image} alt="" />
+          </div>
+        )}
       </div>
     </div>
   );
