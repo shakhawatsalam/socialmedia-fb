@@ -2,10 +2,12 @@ import React from "react";
 import "./Auth.css";
 import Logo from "../../img/logo.png";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { logIn, singUp } from "../../actions/AuthAction";
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(true);
-
+  const dispatch = useDispatch();
   const [data, setData] = useState({
     firstname: "",
     lastname: "",
@@ -25,11 +27,12 @@ const Auth = () => {
     e.preventDefault();
 
     if (isSignUp) {
-      if (data.password !== data.confirmpass) {
-        setConfirmPass(false);
+      data.password === data.confirmpass ? dispatch(singUp(data)) : setConfirmPass(false)
+    } else {
+      dispatch(logIn(data))
       }
     }
-  };
+  
 
   //resetForm
   const resetForm = () => {
@@ -42,8 +45,9 @@ const Auth = () => {
       confirmpass: "",
     });
   };
-  return (
-    <div className='Auth'>
+return (
+  
+  <div className='Auth'>
       {/* Left Side  */}
       <div className='a_left'>
         <img src={Logo} alt='' />
