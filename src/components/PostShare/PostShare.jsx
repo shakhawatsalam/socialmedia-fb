@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { uploadImage, uploadPost } from "../../actions/uploadAction";
 
 const PostShare = () => {
+  const loading = useSelector((state) => state.postReducer.uploading);
   const [image, setImage] = useState(null);
   const imageRef = useRef();
   const dispatch = useDispatch();
@@ -22,6 +23,11 @@ const PostShare = () => {
       setImage(img);
     }
   };
+  //reset function
+  const reset = () => {
+    setImage(null);
+    desc.current.value = "";
+  };
 
   //handleSubmit button function
   const handleSubmit = (e) => {
@@ -33,23 +39,29 @@ const PostShare = () => {
     if (image) {
       const data = new FormData();
       const filename = Date.now() + image.name;
-      data.append("name", filename)
-      data.append("file", image)
+      data.append("name", filename);
+      data.append("file", image);
       newPost.image = filename;
       console.log(newPost);
       try {
-        dispatch(uploadImage(data))
+        dispatch(uploadImage(data));
       } catch (error) {
         console.log(error);
       }
     }
-    dispatch(uploadPost(newPost))
+    dispatch(uploadPost(newPost));
+    reset();
   };
   return (
     <div className='PostShare'>
       <img src={ProfileImage} alt='' />
       <div>
-        <input ref={desc} required type='text' placeholder="What's on your mind" />
+        <input
+          ref={desc}
+          required
+          type='text'
+          placeholder="What's on your mind"
+        />
         <div className='postOption'>
           <div
             className='option'
@@ -70,8 +82,11 @@ const PostShare = () => {
             <UilSchedule />
             Shedule
           </div>
-          <button className='button ps_button' onClick={handleSubmit}>
-            Share
+          <button
+            disabled={loading}
+            className='button ps_button'
+            onClick={handleSubmit}>
+            {loading ? "Uploading..." : "Share"}
           </button>
           <div style={{ display: "none" }}>
             <input
