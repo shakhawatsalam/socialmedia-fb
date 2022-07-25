@@ -6,11 +6,15 @@ import { UilPlayCircle } from "@iconscout/react-unicons";
 import { UilLocationPoint } from "@iconscout/react-unicons";
 import { UilSchedule } from "@iconscout/react-unicons";
 import { UilTimes } from "@iconscout/react-unicons";
+import { useDispatch, useSelector } from "react-redux";
+import { uploadImage, uploadPost } from "../../actions/uploadAction";
 
 const PostShare = () => {
   const [image, setImage] = useState(null);
   const imageRef = useRef();
-  console.log(image);
+  const dispatch = useDispatch();
+  const desc = useRef();
+  const { user } = useSelector((state) => state.authReducer.authData);
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
@@ -20,12 +24,32 @@ const PostShare = () => {
   };
 
   //handleSubmit button function
-  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newPost = {
+      userId: user._id,
+      desc: desc.current.value,
+    };
+    if (image) {
+      const data = new FormData();
+      const filename = Date.now() + image.name;
+      data.append("name", filename)
+      data.append("file", image)
+      newPost.image = filename;
+      console.log(newPost);
+      try {
+        dispatch(uploadImage(data))
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    dispatch(uploadPost(newPost))
+  };
   return (
     <div className='PostShare'>
       <img src={ProfileImage} alt='' />
       <div>
-        <input type='text' placeholder="What's on your mind" />
+        <input ref={desc} required type='text' placeholder="What's on your mind" />
         <div className='postOption'>
           <div
             className='option'
@@ -46,7 +70,9 @@ const PostShare = () => {
             <UilSchedule />
             Shedule
           </div>
-          <button className='button ps_button' onClick={handleSubmit}>Share</button>
+          <button className='button ps_button' onClick={handleSubmit}>
+            Share
+          </button>
           <div style={{ display: "none" }}>
             <input
               type='file'
