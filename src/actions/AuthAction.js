@@ -13,11 +13,11 @@ export const logIn = (formData) => async (dispatch) => {
 }
 
 
-export const singUp = (formData) => async (dispatch) => {
+export const signUp = (formData) => async (dispatch) => {
 
     dispatch({ type: "AUTH_START" })
     try {
-        const { data } = await AuthApi.logIn(formData);
+        const { data } = await AuthApi.signUp(formData);
         dispatch({ type: "AUTH_SUCCESS", data: data })
     } catch (error) {
         console.log(error);

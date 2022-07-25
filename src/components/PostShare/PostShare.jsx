@@ -15,11 +15,12 @@ const PostShare = () => {
     if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
 
-      setImage({
-        image: URL.createObjectURL(img),
-      });
+      setImage(img);
     }
   };
+
+  //handleSubmit button function
+  
   return (
     <div className='PostShare'>
       <img src={ProfileImage} alt='' />
@@ -45,7 +46,7 @@ const PostShare = () => {
             <UilSchedule />
             Shedule
           </div>
-          <button className='button ps_button'>Share</button>
+          <button className='button ps_button' onClick={handleSubmit}>Share</button>
           <div style={{ display: "none" }}>
             <input
               type='file'
@@ -57,8 +58,8 @@ const PostShare = () => {
         </div>
         {image && (
           <div className='previewImage'>
-            <UilTimes onClick={() => setImage(null) } />
-            <img src={image.image} alt="" />
+            <UilTimes onClick={() => setImage(null)} />
+            <img src={URL.createObjectURL(image)} alt='' />
           </div>
         )}
       </div>
