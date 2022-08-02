@@ -1,9 +1,12 @@
+import React, { useState } from "react";
 import { Modal, useMantineTheme } from "@mantine/core";
-import { useState } from "react";
+// import "./ProfileModal.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { uploadImage } from "../../actions/uploadAction";
+import { updateUser } from "../../actions/userAction";
 
-function ProfileModal({ modalOpened, setModalOpened, data }) {
+const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
   const theme = useMantineTheme();
   const { password, ...other } = data;
   const [formData, setFormData] = useState(other);
@@ -11,18 +14,52 @@ function ProfileModal({ modalOpened, setModalOpened, data }) {
   const [coverImage, setCoverImage] = useState(null);
   const dispatch = useDispatch();
   const param = useParams();
-  const { user } = useSelector((state) => state.authReducer.authData);
 
-  // handle change function
+  const { user } = useSelector((state) => state.authReducer.authData);
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log(formData);
   };
 
-  // handle change Image 
-  const onImageChange = (e) => {
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let img = event.target.files[0];
+      event.target.name === "profileImage"
+        ? setProfileImage(img)
+        : setCoverImage(img);
+    }
+  };
 
-  }
+  // form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let UserData = formData;
+    if (profileImage) {
+      const data = new FormData();
+      const filename = Date.now() + profileImage.name;
+      data.append("name", filename);
+      data.append("file", profileImage);
+      UserData.profilePicture = filename;
+      try {
+        dispatch(uploadImage(data));
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    if (coverImage) {
+      const data = new FormData();
+      const filename = Date.now() + coverImage.name;
+      data.append("name", filename);
+      data.append("file", coverImage);
+      UserData.coverPicture = filename;
+      try {
+        dispatch(uploadImage(data));
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    dispatch(updateUser(param.id, UserData));
+    setModalOpened(false);
+  };
 
   return (
     <Modal
@@ -36,75 +73,81 @@ function ProfileModal({ modalOpened, setModalOpened, data }) {
       size='55%'
       opened={modalOpened}
       onClose={() => setModalOpened(false)}>
-      <form className='infoForm'>
+      <form className='infoForm' onSubmit={handleSubmit}>
         <h3>Your Info</h3>
+        <div>
+          <input
+            value={formData.firstname}
+            onChange={handleChange}
+            type='text'
+            placeholder='First Name'
+            name='firstname'
+            className='infoInput'
+          />
+          <input
+            value={formData.lastname}
+            onChange={handleChange}
+            type='text'
+            placeholder='Last Name'
+            name='lastname'
+            className='infoInput'
+          />
+        </div>
 
         <div>
           <input
-            type='text'
-            className='infoInput'
-            name='firstname'
-            placeholder='First Name'
-            onChange={handleChange}
-            value={formData.firstname}
-          />
-          <input
-            type='text'
-            className='infoInput'
-            name='lastName'
-            placeholder='Last Name'
-            onChange={handleChange}
-            value={formData.lastname}
-          />
-        </div>
-        <div>
-          <input
-            type='text'
-            className='infoInput'
-            name='worksAt'
-            placeholder='Works at'
-            onChange={handleChange}
             value={formData.worksAt}
+            onChange={handleChange}
+            type='text'
+            placeholder='Works at'
+            name='worksAt'
+            className='infoInput'
           />
         </div>
+
         <div>
           <input
+            value={formData.livesin}
+            onChange={handleChange}
             type='text'
-            className='infoInput'
-            name='livesin'
             placeholder='Lives in'
-            onChange={handleChange}
-            value={formData.livesIn}
+            name='livesin'
+            className='infoInput'
           />
           <input
-            type='text'
-            className='infoInput'
-            name='country'
-            placeholder='Country'
-            onChange={handleChange}
             value={formData.country}
+            onChange={handleChange}
+            type='text'
+            placeholder='Country'
+            name='country'
+            className='infoInput'
           />
         </div>
+
         <div>
           <input
+            value={formData.relationship}
+            onChange={handleChange}
             type='text'
             className='infoInput'
-            placeholder='RelationShip Status'
+            placeholder='Relationship status'
             name='relationship'
-            onChange={handleChange}
-            value={formData.relationship}
           />
         </div>
+
         <div>
-          Profile Image
+          Profile image
           <input type='file' name='profileImage' onChange={onImageChange} />
-          Cover Image
+          Cover image
           <input type='file' name='coverImage' onChange={onImageChange} />
         </div>
-        <button className='button infoButton'>Update</button>
+
+        <button className='button infoButton' type='submit'>
+          Update
+        </button>
       </form>
     </Modal>
   );
-}
+};
 
 export default ProfileModal;

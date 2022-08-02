@@ -16,7 +16,7 @@ const InfoCard = () => {
   const profileUserId = params.id;
   const [profileUser, setProfileUser] = useState({});
   const { user } = useSelector((state) => state.authReducer.authData);
-
+  console.log(user);
   useEffect(() => {
     const fetchProfileIdUser = async () => {
       if (profileUserId === user._id) {

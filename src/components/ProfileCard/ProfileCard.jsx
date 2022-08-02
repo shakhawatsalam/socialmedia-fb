@@ -1,12 +1,15 @@
 import React from "react";
 import "./ProfileCard.css";
-import Cover from "../../img/cover.jpg";
-import Profile from "../../img/profileImg.jpg";
+// import Cover from "../../img/cover.jpg";
+// import Profile from "../../img/profileImg.jpg";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const ProfileCard = ({ location }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
+  console.log(user.profilePicture);
+  console.log(user.coverPicture);
+  console.log(user.worksAt);
   const posts = useSelector((state) => state.postReducer.posts)
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
 
@@ -15,16 +18,16 @@ const ProfileCard = ({ location }) => {
       <div className='ProfileImages'>
         <img
           src={
-            user.coverPicture
-              ? serverPublic + user.coverPicture
+            user?.coverPicture
+              ? serverPublic + user?.coverPicture
               : serverPublic + "defaultCover.jpg"
           }
           alt=''
         />
         <img
           src={
-            user.profilePicture
-              ? serverPublic + user.profilePicture
+            user?.profilePicture
+              ? serverPublic + user?.profilePicture
               : serverPublic + "defaultProfile.png"
           }
           alt=''
@@ -34,7 +37,7 @@ const ProfileCard = ({ location }) => {
         <span>
           {user.firstname} {user.lastname}
         </span>
-        <span>{user.wokksAt ? user.worksAt : "write about yourself"}</span>
+        <span>{user.worksAt ? user.worksAt : "write about yourself"}</span>
       </div>
 
       {/* follows and following  */}
